@@ -1,0 +1,15 @@
+﻿buyLoot = (ev) => {
+        const { contract, accounts } = this.state;                          		 // essentially a constructor, setting the relevant contract and accounts to their variables
+
+        ev.preventDefault();							// prevent the default action of the event ev from occurring (not really sure what ev means in this scenario) 
+        this.setState({ loading: true });					// sets the state of our app to loading
+        contract.methods.buyToken(this.state.buying.id).send(
+            { from: accounts[0], value: this.state.buying.price }		// calls upon ethereum smart contract to have the relevant account in accounts buy at the buying price
+        ).then(() => this.fetchLoot()).then(() => {
+            this.setState({ buying: null });					// fetches loot, and if there is no loot to fetch, set buying to null, essentially saying there’s nothing to buy
+        }, (err) => {
+            console.error(err);							// if there’s an error, throw the error message and cancel the buying of loot
+            alert('Creating the token faile!');
+            this.setState({ buying: null });
+        })
+    }
